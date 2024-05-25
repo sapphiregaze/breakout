@@ -40,3 +40,4 @@ python3 main.py
 # Credits
 
 Music by [White_Records on Pixabay](https://pixabay.com/music/video-games-byte-blast-8-bit-arcade-music-background-music-for-video-208780/)
+Sound Effects from [Mixkit](https://mixkit.co/)
