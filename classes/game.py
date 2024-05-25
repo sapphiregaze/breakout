@@ -27,39 +27,49 @@ class Game:
         self.lost = False
 
     def run(self):
-        self.show_start_screen()
+        self.show_screen()
         while True:
             self.handle_events()
             if self.running:
                 self.update()
                 self.draw()
             elif self.won:
-                self.show_winning_screen()
+                self.show_screen()
             elif self.lost:
-                self.show_losing_screen()
+                self.show_screen()
             self.clock.tick(60)
         pygame.quit()
         sys.exit()
 
-    def show_start_screen(self):
-        start_screen = True
-        while start_screen:
+    def show_screen(self):
+        if not (self.won or self.lost):
+            title = "Breakout"
+            subtitle = "Press any key to start"
+        elif self.won:
+            title = "You Won!"
+            subtitle = "Press any key to play again"
+        else:
+            title = "You Lost :("
+            subtitle = "Press any key to play again"
+
+        current_screen = True
+        while current_screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    start_screen = False
+                    current_screen = False
 
             self.screen.fill(config.BLACK)
             self.draw_text(
-                "Breakout", 
+                title, 
                 64, 
                 config.WHITE, 
                 config.SCREEN_WIDTH // 2, config.SCREEN_HEIGHT // 2 - 100
             )
             self.draw_text(
-                "Press any key to start", 
+                subtitle, 
                 32, 
                 config.WHITE, 
                 config.SCREEN_WIDTH // 2, 
@@ -67,66 +77,10 @@ class Game:
             )
             pygame.display.flip()
             self.clock.tick(15)
-
-    def show_winning_screen(self):
-        winning_screen = True
-        while winning_screen:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.reset_game()
-                    self.show_start_screen()
-                    winning_screen = False
-
-            self.screen.fill(config.BLACK)
-            self.draw_text(
-                "You Win!", 
-                64, 
-                config.WHITE, 
-                config.SCREEN_WIDTH // 2, 
-                config.SCREEN_HEIGHT // 2 - 100
-            )
-            self.draw_text(
-                "Press any key to play again", 
-                32, 
-                config.WHITE, 
-                config.SCREEN_WIDTH // 2, 
-                config.SCREEN_HEIGHT // 2 + 50
-            )
-            pygame.display.flip()
-            self.clock.tick(15)
-
-    def show_losing_screen(self):
-        losing_screen = True
-        while losing_screen:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.reset_game()
-                    self.show_start_screen()
-                    losing_screen = False
-
-            self.screen.fill(config.BLACK)
-            self.draw_text(
-                "You lost :(", 
-                64, 
-                config.WHITE, 
-                config.SCREEN_WIDTH // 2, 
-                config.SCREEN_HEIGHT // 2 - 100
-            )
-            self.draw_text(
-                "Press any key to try again", 
-                32, 
-                config.WHITE, 
-                config.SCREEN_WIDTH // 2, 
-                config.SCREEN_HEIGHT // 2 + 50
-            )
-            pygame.display.flip()
-            self.clock.tick(15)
+            
+        if not current_screen and not self.running:
+            self.reset_game()
+            self.show_screen()
 
     def draw_text(self, text, size, color, x, y):
         font = pygame.font.Font(None, size)
