@@ -25,6 +25,8 @@ class Game:
         self.running = True
         self.won = False
         self.lost = False
+        
+        self.score = 0
 
     def run(self):
         self.show_screen()
@@ -46,10 +48,10 @@ class Game:
             title = "Breakout"
             subtitle = "Press any key to start"
         elif self.won:
-            title = "You Won!"
+            title = f"You won! Perfect score!"
             subtitle = "Press any key to play again"
         else:
-            title = "You Lost :("
+            title = f"You lost with a score of {self.score} :("
             subtitle = "Press any key to play again"
 
         current_screen = True
@@ -112,6 +114,7 @@ class Game:
             if brick.active and self.ball.rect.colliderect(brick.rect):
                 self.ball.dy = -self.ball.dy
                 brick.active = False
+                self.score += 1
                 break
 
         if self.ball.rect.bottom > config.SCREEN_HEIGHT:
@@ -128,4 +131,11 @@ class Game:
         self.ball.draw(self.screen)
         for brick in self.bricks:
             brick.draw(self.screen)
+            
+        font = pygame.font.Font(None, 35)
+        text = font.render(f"Score: {self.score}", True, config.WHITE)
+        text_rect = text.get_rect()
+        text_rect.topleft = (10, config.SCREEN_HEIGHT - text_rect.height - 10)
+        self.screen.blit(text, text_rect)
+
         pygame.display.flip()
