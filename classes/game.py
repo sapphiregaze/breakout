@@ -13,6 +13,9 @@ class Game:
         pygame.display.set_caption("Breakout")
         self.clock = pygame.time.Clock()
         self.reset_game()
+        
+        self.ball_bounce_sound = pygame.mixer.Sound("assets/ball-bounce.wav")
+        self.brick_break_sound = pygame.mixer.Sound("assets/brick-break.wav")
 
     def reset_game(self):
         self.paddle = paddle.Paddle()
@@ -109,11 +112,13 @@ class Game:
 
         if self.ball.rect.colliderect(self.paddle.rect):
             self.ball.dy = -self.ball.dy
+            self.ball_bounce_sound.play()
 
         for brick in self.bricks:
             if brick.active and self.ball.rect.colliderect(brick.rect):
                 self.ball.dy = -self.ball.dy
                 brick.active = False
+                self.brick_break_sound.play()
                 self.score += 1
                 break
 
